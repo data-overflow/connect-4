@@ -2,7 +2,7 @@ import random
 from typing import List, Tuple
 
 SYMBOLS = [' ', 'X', 'O']
-DIFFICULTY = 3
+DIFFICULTY = 5
 INFINITY = 512
 
 
@@ -142,7 +142,7 @@ class Connect4:
             legal_moves = self.get_legal_moves()
             best_val = INFINITY
             best_pos = legal_moves[0]
-            for move in legal_moves():
+            for move in legal_moves:
                 val = self.minimax(diff+1, move, True)
                 val += abs(self.cols//2-move) - (self.get_freespaces(move)//2)
                 if val < best_val:
