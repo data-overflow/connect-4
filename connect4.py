@@ -2,7 +2,7 @@ import random
 from typing import List, Tuple
 
 SYMBOLS = [' ', 'X', 'O']
-DIFFICULTY = 5
+DIFFICULTY = 3
 INFINITY = 512
 
 
@@ -173,11 +173,7 @@ class Connect4:
 
 if __name__ == '__main__':
     game = Connect4()
-    print("""
-    Connect 4
-    ---------
-
-    """)
+    print("\nConnect 4\n---------")
 
     win = game.mainloop()
     game.draw_board()
