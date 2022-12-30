@@ -94,7 +94,7 @@ class Connect4:
         return [i for i in range(self.cols) if self.board[0][i] == 0]
 
     def minimax(self, depth, pos, is_max,
-                alpha=-INFINITY, beta=INFINITY) -> Tuple[int, int]:
+                alpha=-INFINITY, beta=INFINITY) -> int:
         '''minimax implementation with alpha beta pruning'''
         if is_max:
             player = -1
@@ -108,34 +108,30 @@ class Connect4:
         # Terminal nodes
         if is_winning or depth == 0:
             self.remove(pos)
-            return pos, is_winning * depth * 32
+            return is_winning * depth * 32
 
         # Maximizer turn
         if is_max:
             best_val = -INFINITY
-            best_pos = legal_moves[0]
             for move in legal_moves:
-                p, val = self.minimax(depth-1, move, False, alpha, beta)
-                if val > best_val:
-                    best_val, best_pos = val, move
+                val = self.minimax(depth-1, move, False, alpha, beta)
+                best_val = max(best_val, val)
                 alpha = max(alpha, best_val)
                 if beta <= alpha:
                     break
             self.remove(pos)
-            return best_pos, best_val
+            return best_val
         # Minimizer turn
         else:
             best_val = INFINITY
-            best_pos = legal_moves[0]
             for move in legal_moves:
-                p, val = self.minimax(depth-1, move, True, alpha, beta)
-                if val < best_val:
-                    best_val, best_pos = val, move
+                val = self.minimax(depth-1, move, True, alpha, beta)
+                best_val = min(best_val, val)
                 beta = min(beta, best_val)
                 if beta <= alpha:
                     break
             self.remove(pos)
-            return best_pos, best_val
+            return best_val
 
     def play_ai(self, diff: int = 0) -> None:
         '''Make the AI make it's move'''
@@ -144,10 +140,10 @@ class Connect4:
             self.place(pos, -1)
         elif diff >= 1:
             legal_moves = self.get_legal_moves()
-            best_val = 256
+            best_val = INFINITY
             best_pos = legal_moves[0]
-            for move in self.get_legal_moves():
-                p, val = self.minimax(diff+1, move, True)
+            for move in legal_moves():
+                val = self.minimax(diff+1, move, True)
                 val += abs(self.cols//2-move) - (self.get_freespaces(move)//2)
                 if val < best_val:
                     best_val = val
@@ -177,7 +173,12 @@ class Connect4:
 
 if __name__ == '__main__':
     game = Connect4()
-    print("""Connect 4\n---------""")
+    print("""
+    Connect 4
+    ---------
+
+    """)
+
     win = game.mainloop()
     game.draw_board()
 
